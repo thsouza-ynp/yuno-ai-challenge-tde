@@ -7,8 +7,8 @@ Built as a response to the [Yuno Engineering Challenge](CHALLENGE.md): identify 
 ## Quick Start
 
 ```bash
-git clone <repo>
-cd yuno-ai-challenge
+git clone https://github.com/thsouza-ynp/yuno-ai-challenge-tde.git
+cd yuno-ai-challenge-tde
 npm install
 npm run dev
 # Open http://localhost:3000
