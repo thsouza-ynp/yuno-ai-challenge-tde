@@ -1,4 +1,4 @@
-import Groq from "groq-sdk";
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const apiKey = process.env.GROQ_API_KEY;
@@ -8,8 +8,6 @@ export async function POST(req: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-
-  const groq = new Groq({ apiKey });
 
   try {
     const { messages, context } = await req.json();
@@ -33,19 +31,61 @@ Guidelines:
 - Keep responses concise and actionable (2-3 paragraphs max)
 - Use Mexican business context (SPEI, OXXO, MXN currency)`;
 
-    const stream = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "system" as const, content: systemPrompt }, ...messages],
-      stream: true,
-      max_tokens: 1024,
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [{ role: "system", content: systemPrompt }, ...messages],
+        stream: true,
+        max_tokens: 1024,
+      }),
     });
 
+    if (!groqRes.ok) {
+      const errBody = await groqRes.text();
+      console.error("Groq API error:", groqRes.status, errBody);
+      return new Response(JSON.stringify({ error: `Groq API ${groqRes.status}: ${errBody}` }), {
+        status: 502,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Pipe the SSE stream from Groq, extracting text deltas
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
     const readable = new ReadableStream({
       async start(controller) {
-        for await (const chunk of stream) {
-          const text = chunk.choices[0]?.delta?.content || "";
-          if (text) controller.enqueue(encoder.encode(text));
+        const reader = groqRes.body?.getReader();
+        if (!reader) { controller.close(); return; }
+
+        let buffer = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data: ")) continue;
+            const data = trimmed.slice(6);
+            if (data === "[DONE]") continue;
+
+            try {
+              const parsed = JSON.parse(data);
+              const text = parsed.choices?.[0]?.delta?.content || "";
+              if (text) controller.enqueue(encoder.encode(text));
+            } catch {
+              // skip malformed chunks
+            }
+          }
         }
         controller.close();
       },
@@ -56,7 +96,7 @@ Guidelines:
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Groq API error:", message);
+    console.error("Chat route error:", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
