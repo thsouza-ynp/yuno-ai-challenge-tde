@@ -1,11 +1,20 @@
 import Groq from "groq-sdk";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 export async function POST(req: Request) {
-  const { messages, context } = await req.json();
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: "GROQ_API_KEY not configured" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
-  const systemPrompt = `You are a senior fraud analyst for Mercado Luna, a Mexican e-commerce platform. You analyze transaction data to identify fraud patterns and provide actionable recommendations.
+  const groq = new Groq({ apiKey });
+
+  try {
+    const { messages, context } = await req.json();
+
+    const systemPrompt = `You are a senior fraud analyst for Mercado Luna, a Mexican e-commerce platform. You analyze transaction data to identify fraud patterns and provide actionable recommendations.
 
 Current dashboard statistics:
 - Total Transactions: ${context.kpi?.totalTransactions?.toLocaleString() ?? "N/A"}
@@ -24,25 +33,33 @@ Guidelines:
 - Keep responses concise and actionable (2-3 paragraphs max)
 - Use Mexican business context (SPEI, OXXO, MXN currency)`;
 
-  const stream = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [{ role: "system" as const, content: systemPrompt }, ...messages],
-    stream: true,
-    max_tokens: 1024,
-  });
+    const stream = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "system" as const, content: systemPrompt }, ...messages],
+      stream: true,
+      max_tokens: 1024,
+    });
 
-  const encoder = new TextEncoder();
-  const readable = new ReadableStream({
-    async start(controller) {
-      for await (const chunk of stream) {
-        const text = chunk.choices[0]?.delta?.content || "";
-        if (text) controller.enqueue(encoder.encode(text));
-      }
-      controller.close();
-    },
-  });
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const text = chunk.choices[0]?.delta?.content || "";
+          if (text) controller.enqueue(encoder.encode(text));
+        }
+        controller.close();
+      },
+    });
 
-  return new Response(readable, {
-    headers: { "Content-Type": "text/plain; charset=utf-8" },
-  });
+    return new Response(readable, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Groq API error:", message);
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
