@@ -33,11 +33,12 @@ export function KpiCards({ kpi }: KpiCardsProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((c) => (
-        <div key={c.label} className="card">
-          <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1">
+        <div key={c.label} className="card relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: c.color }} />
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: "var(--text-muted)" }}>
             {c.label}
           </p>
-          <p className="text-2xl font-bold" style={{ color: c.color }}>
+          <p className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
             {c.value}
           </p>
         </div>

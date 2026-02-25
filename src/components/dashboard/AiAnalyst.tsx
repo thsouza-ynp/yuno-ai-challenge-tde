@@ -105,10 +105,10 @@ export function AiAnalyst({ context }: AiAnalystProps) {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]">
             <div>
-              <span className="text-sm font-semibold text-white">AI Fraud Analyst</span>
+              <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>AI Fraud Analyst</span>
               <span className="text-xs text-[var(--text-secondary)] ml-2">Llama 3.3 70B</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-[var(--text-secondary)] hover:text-white">
+            <button onClick={() => setIsOpen(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
@@ -129,9 +129,9 @@ export function AiAnalyst({ context }: AiAnalystProps) {
                       onClick={() => sendMessage(q)}
                       className="block w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
                       style={{
-                        background: "rgba(99,102,241,0.1)",
-                        color: "#a5b4fc",
-                        border: "1px solid rgba(99,102,241,0.2)",
+                        background: "var(--primary-faint)",
+                        color: "var(--primary)",
+                        border: "1px solid rgba(79,70,229,0.2)",
                       }}
                     >
                       {q}
@@ -151,8 +151,9 @@ export function AiAnalyst({ context }: AiAnalystProps) {
                   style={{
                     background:
                       msg.role === "user"
-                        ? "rgba(99,102,241,0.2)"
-                        : "rgba(255,255,255,0.05)",
+                        ? "var(--primary-faint)"
+                        : "#f8fafc",
+                    border: msg.role === "assistant" ? "1px solid var(--border-color)" : "none",
                     color: "var(--text-primary)",
                   }}
                 >

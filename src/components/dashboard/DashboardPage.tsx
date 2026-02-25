@@ -19,7 +19,6 @@ import { GeographicChart } from "./GeographicChart";
 import { PaymentMethodRisk } from "./PaymentMethodRisk";
 import { AnomalyScoreChart } from "./AnomalyScoreChart";
 import { AnomalyTable } from "./AnomalyTable";
-import { TransactionFeed } from "./TransactionFeed";
 import { AiAnalyst } from "./AiAnalyst";
 import type { DashboardContext } from "@/lib/types";
 
@@ -50,14 +49,6 @@ export function DashboardPage() {
     [filtered]
   );
 
-  const recent = useMemo(
-    () =>
-      [...filtered]
-        .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
-        .slice(0, 25),
-    [filtered]
-  );
-
   const dashContext: DashboardContext = useMemo(
     () => ({
       kpi,
@@ -73,12 +64,21 @@ export function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen p-4 max-w-[1600px] mx-auto space-y-4">
-      <DashboardHeader
-        isStreaming={isStreaming}
-        onToggle={toggleStreaming}
-        txnCount={transactions.length}
-      />
+    <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-3 bg-[var(--bg-primary)] border-b" style={{ borderColor: "var(--border-color)" }}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-muted)" }}>
+            <span>Analytics</span>
+            <span>/</span>
+            <span style={{ color: "var(--text-primary)" }}>Overview</span>
+          </div>
+          <DashboardHeader
+            isStreaming={isStreaming}
+            onToggle={toggleStreaming}
+            txnCount={transactions.length}
+          />
+        </div>
+      </div>
 
       <FilterBar
         filters={filters}
@@ -91,15 +91,14 @@ export function DashboardPage() {
 
       <KpiCards kpi={kpi} />
 
-      {/* 2-column grid for charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card title="Temporal Pattern -- Chargebacks by Hour & Day">
+        <Card title="Temporal Pattern — Chargebacks by Hour & Day">
           <TemporalHeatmap data={heatmap} />
         </Card>
-        <Card title="Geographic Concentration -- Chargeback Rate by State">
+        <Card title="Geographic Concentration — Chargeback Rate by State">
           <GeographicChart data={geo} />
         </Card>
-        <Card title="Payment Method Risk -- Chargeback Rate">
+        <Card title="Payment Method Risk — Chargeback Rate">
           <PaymentMethodRisk data={risk} />
         </Card>
         <Card title="Anomaly Score Distribution">
@@ -107,17 +106,9 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Full width sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
-          <Card title="Flagged Transactions">
-            <AnomalyTable transactions={suspicious} />
-          </Card>
-        </div>
-        <Card title="Live Transaction Feed">
-          <TransactionFeed transactions={recent} />
-        </Card>
-      </div>
+      <Card title="Flagged Transactions">
+        <AnomalyTable transactions={suspicious} />
+      </Card>
 
       <AiAnalyst context={dashContext} />
     </div>

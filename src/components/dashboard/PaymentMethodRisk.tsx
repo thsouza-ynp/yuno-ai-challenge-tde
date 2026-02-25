@@ -37,11 +37,12 @@ export function PaymentMethodRisk({ data }: PaymentMethodRiskProps) {
         />
         <Tooltip
           contentStyle={{
-            background: "var(--bg-secondary)",
+            background: "white",
             border: "1px solid var(--border-color)",
             borderRadius: 8,
             color: "var(--text-primary)",
             fontSize: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           }}
           formatter={(value: number | undefined) => [`${(value ?? 0).toFixed(2)}%`, "Chargeback Rate"]}
           labelFormatter={(label) => {

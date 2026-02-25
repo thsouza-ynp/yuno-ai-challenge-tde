@@ -47,11 +47,12 @@ export function GeographicChart({ data }: GeographicChartProps) {
         />
         <Tooltip
           contentStyle={{
-            background: "var(--bg-secondary)",
+            background: "white",
             border: "1px solid var(--border-color)",
             borderRadius: 8,
             color: "var(--text-primary)",
             fontSize: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           }}
           formatter={(value: number | undefined, name: string | undefined) => {
             const v = value ?? 0;

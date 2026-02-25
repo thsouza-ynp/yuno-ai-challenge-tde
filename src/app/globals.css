@@ -1,19 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0f0f23;
-  --bg-secondary: #1a1a2e;
-  --bg-card: #16213e;
-  --border-color: #2d3748;
-  --text-primary: #e2e8f0;
-  --text-secondary: #a0aec0;
-  --accent: #6366f1;
+  --primary: #4F46E5;
+  --primary-light: #6366F1;
+  --primary-faint: #EEF2FF;
+  --bg-primary: #fcfcff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e5e5e5;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent: #4F46E5;
+  --destructive: #EF4444;
+  --destructive-light: #FEE2E2;
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --sidebar-w: 240px;
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Custom scrollbar */
@@ -22,10 +34,10 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: #cbd5e1;
   border-radius: 3px;
 }
 
@@ -33,7 +45,7 @@ body {
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 0.5rem;
   padding: 1.25rem;
 }
 
@@ -43,19 +55,13 @@ body {
   50% { opacity: 0.4; }
 }
 .pulse-live {
-  animation: pulse-live 2s ease-in-out infinite;
+  animation: pulse-live 1.5s ease-in-out infinite;
 }
 
-/* Slide-in animation for transaction feed */
+/* Slide-in animation */
 @keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .slide-in {
   animation: slide-in 0.3s ease-out;
@@ -66,18 +72,24 @@ body {
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  border-radius: 9999px;
+  border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
-/* Recharts overrides for dark theme */
+/* Recharts overrides for light theme */
 .recharts-cartesian-grid-horizontal line,
 .recharts-cartesian-grid-vertical line {
-  stroke: #2d3748;
+  stroke: #e5e7eb;
 }
 .recharts-text {
-  fill: #9ca3af;
+  fill: #64748b;
 }
+
+/* Status badges */
+.status-approved { background: #D1FAE5; color: #047857; }
+.status-declined { background: #f1f5f9; color: #64748b; }
+.status-chargeback { background: #FEE2E2; color: #EF4444; }
+.status-pending { background: #FEF3C7; color: #B45309; }
+.status-refunded { background: #DBEAFE; color: #1D4ED8; }

@@ -71,10 +71,10 @@ export const COLORS = {
   success: "#10b981", // emerald
   info: "#3b82f6", // blue
   muted: "#6b7280", // gray
-  heatmapLow: "#1e1b4b", // indigo-950
+  heatmapLow: "#eef2ff", // indigo-50
   heatmapHigh: "#ef4444", // red
-  chartGrid: "#374151", // gray-700
-  chartText: "#9ca3af", // gray-400
+  chartGrid: "#e5e7eb", // gray-200
+  chartText: "#64748b", // slate-500
 };
 
 export const METHOD_COLORS: Record<PaymentMethod, string> = {

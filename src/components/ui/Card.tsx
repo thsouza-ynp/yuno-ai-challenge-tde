@@ -10,7 +10,7 @@ export function Card({ title, children, className = "" }: CardProps) {
   return (
     <div className={`card ${className}`}>
       {title && (
-        <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+        <h3 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">
           {title}
         </h3>
       )}

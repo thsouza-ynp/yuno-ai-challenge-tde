@@ -16,7 +16,7 @@ function ScoreBar({ score }: { score: number }) {
   const color = score < 30 ? COLORS.success : score < 60 ? COLORS.warning : COLORS.danger;
   return (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-2 rounded-full bg-gray-700 overflow-hidden">
+      <div className="w-16 h-2 rounded-full bg-gray-200 overflow-hidden">
         <div className="h-full rounded-full" style={{ width: `${score}%`, background: color }} />
       </div>
       <span className="text-xs" style={{ color }}>
@@ -84,14 +84,14 @@ export function AnomalyTable({ transactions }: AnomalyTableProps) {
           <thead>
             <tr className="text-[var(--text-secondary)] border-b border-[var(--border-color)]">
               <th
-                className="py-2 px-2 text-left cursor-pointer hover:text-white"
+                className="py-2 px-2 text-left cursor-pointer hover:text-[var(--text-primary)]"
                 onClick={() => handleSort("timestamp")}
               >
                 Time{sortIndicator("timestamp")}
               </th>
               <th className="py-2 px-2 text-left">Customer</th>
               <th
-                className="py-2 px-2 text-right cursor-pointer hover:text-white"
+                className="py-2 px-2 text-right cursor-pointer hover:text-[var(--text-primary)]"
                 onClick={() => handleSort("amount")}
               >
                 Amount{sortIndicator("amount")}
@@ -99,7 +99,7 @@ export function AnomalyTable({ transactions }: AnomalyTableProps) {
               <th className="py-2 px-2 text-left">Method</th>
               <th className="py-2 px-2 text-left">Location</th>
               <th
-                className="py-2 px-2 text-left cursor-pointer hover:text-white"
+                className="py-2 px-2 text-left cursor-pointer hover:text-[var(--text-primary)]"
                 onClick={() => handleSort("anomalyScore")}
               >
                 Score{sortIndicator("anomalyScore")}
@@ -111,7 +111,7 @@ export function AnomalyTable({ transactions }: AnomalyTableProps) {
             {pageItems.map((t) => (
               <tr
                 key={t.id}
-                className="border-b border-[var(--border-color)] border-opacity-30 hover:bg-white/5"
+                className="border-b border-[var(--border-color)] hover:bg-gray-50"
               >
                 <td className="py-2 px-2 whitespace-nowrap">
                   {new Date(t.timestamp).toLocaleString("en-US", {
