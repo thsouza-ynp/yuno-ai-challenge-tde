@@ -1,0 +1,39 @@
+{
+  "name": "yuno-ai-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-data": "npx tsx scripts/generate-data.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thsouza-ynp/yuno-ai-challenge-tde.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thsouza-ynp/yuno-ai-challenge-tde/issues"
+  },
+  "homepage": "https://github.com/thsouza-ynp/yuno-ai-challenge-tde#readme",
+  "dependencies": {
+    "groq-sdk": "^0.37.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "recharts": "^3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}
