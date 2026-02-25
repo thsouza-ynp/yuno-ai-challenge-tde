@@ -6,16 +6,31 @@ Yuno Engineering Challenge: fraud detection data pipeline + interactive dashboar
 
 - **Challenge spec**: `CHALLENGE.md` — full requirements, acceptance criteria, scoring rubric (100 pts)
 - **Time constraint**: 2-hour challenge. Prioritize working software over polish.
-- **Stack decision**: TBD — will be documented here once chosen
+- **Stack**: Next.js 15 + React 19 + TypeScript + Tailwind v4 + Recharts + Groq SDK
+- **Architecture**: Fully client-side pipeline (generator → enrichment → scoring → visualization)
+- **API**: Single /api/chat route for Groq AI analyst
 
 ## Project Structure
 
 ```
-backend/
-  app/
-    config.py              # Pydantic settings (Groq keys, app config)
-    services/
-      groq_client.py       # Reusable Groq chat client (streaming + simple modes)
+src/
+├── app/                    # Next.js app router
+│   ├── api/chat/          # Groq AI analyst endpoint
+│   ├── layout.tsx         # Root layout (dark theme)
+│   └── page.tsx           # Dashboard entry point
+├── components/
+│   ├── dashboard/         # All dashboard components
+│   └── ui/                # Reusable UI primitives
+├── hooks/                 # Custom React hooks
+│   ├── useTransactionStream.ts   # Client-side generator
+│   └── useTransactionFilters.ts  # Filter state management
+└── lib/                   # Core logic
+    ├── types.ts           # Shared type definitions
+    ├── constants.ts       # Configuration & distributions
+    ├── generator.ts       # Transaction data generator (seeded PRNG)
+    ├── enrichment.ts      # Feature computation pipeline
+    ├── scorer.ts          # Anomaly scoring model
+    └── chart-utils.ts     # Chart data transformers
 ```
 
 ## Groq Integration
@@ -102,6 +117,6 @@ Generate mock data with these distributions:
 
 - Keep `.env` out of git (already in `.gitignore`)
 - Use `.env.example` for documenting required env vars
-- Python 3.11+ assumed
-- Prefer async for I/O-bound operations
+- TypeScript strict mode
+- Next.js 15 App Router with React 19
 - No over-engineering — this is a 2-hour prototype
